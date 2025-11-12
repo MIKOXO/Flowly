@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 
 const Landing = () => {
   return (
-    <section className="min-h-screen bg-LightBg dark:bg-DarkBg text-LightText dark:text-DarkText transition-colors duration-300">
+    <section className="min-h-screen bg-LightBg dark:bg-DarkBg text-LightText dark:text-DarkText ease-in-out duration-300">
       <div className="mx-auto container p-6">
         {/* header */}
         <header className="lg:py-4 flex flex-row justify-between items-center">
@@ -27,7 +27,7 @@ const Landing = () => {
             <ThemeToggle />
             <Link
               to="/login"
-              className="ml-5 font-medium flex items-center p-2 lg:p-3 rounded-2xl shadow-lg hover:text-white border border-LightBorder dark:border-DarkBorder bg-LightSecondary dark:bg-DarkSecondary hover:bg-Accent dark:hover:bg-Accent"
+              className="ml-5 font-medium flex items-center p-2 lg:p-3 rounded-2xl shadow-lg hover:text-white border border-LightBorder dark:border-DarkBorder bg-LightSecondary dark:bg-DarkSecondary hover:bg-Accent dark:hover:bg-Accent  duration-300"
             >
               <ArrowRightEndOnRectangleIcon className="w-6 h-6" />
             </Link>
