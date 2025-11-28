@@ -2,13 +2,34 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const AddTaskModal = ({ open, setOpen, onAddTask }) => {
+const AddTaskModal = ({
+  open,
+  setOpen,
+  onAddTask,
+  onUpdateTask,
+  taskToEdit,
+}) => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [column, setColumn] = useState("todo");
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  const isEdit = Boolean(taskToEdit);
   const isValid = title.trim() !== "" && desc.trim() !== "";
+  const canSubmit = isValid && (isEdit ? isInitialized : true);
+
+  useEffect(() => {
+    if (taskToEdit) {
+      setTitle(taskToEdit.title);
+      setDesc(taskToEdit.description);
+      setPriority(taskToEdit.priority);
+      setColumn(taskToEdit.status);
+      setIsInitialized(true);
+    } else {
+      setIsInitialized(true);
+    }
+  }, [taskToEdit]);
 
   const closeModal = () => {
     setOpen(false);
@@ -19,14 +40,26 @@ const AddTaskModal = ({ open, setOpen, onAddTask }) => {
   };
 
   const handleSubmit = () => {
-    if (!isValid) return;
-    onAddTask({
-      id: Date.now(),
-      title,
-      description: desc,
-      priority,
-      status: column,
-    });
+    if (!canSubmit) return;
+
+    if (isEdit) {
+      onUpdateTask({
+        ...taskToEdit,
+        title,
+        description: desc,
+        priority,
+        status: column,
+      });
+    } else {
+      onAddTask({
+        id: Date.now(),
+        title,
+        description: desc,
+        priority,
+        status: column,
+      });
+    }
+
     closeModal();
   };
 
@@ -92,8 +125,7 @@ const AddTaskModal = ({ open, setOpen, onAddTask }) => {
                 className="font-medium w-full p-3 rounded-xl border border-LightBorder dark:border-DarkBorder bg-LightBg dark:bg-DarkBg text-gray-900 dark:text-gray-200 focus:ring-2 focus:ring-Accent outline-none transition"
               >
                 <option value="todo">To Do</option>
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
+                <option value="inprogress">In Progress</option>
               </select>
             </div>
           </div>
@@ -109,15 +141,15 @@ const AddTaskModal = ({ open, setOpen, onAddTask }) => {
           </button>
 
           <button
-            disabled={!isValid}
+            disabled={!canSubmit}
             onClick={handleSubmit}
             className={`p-3 rounded-lg transition text-white ${
-              isValid
+              canSubmit
                 ? "bg-Primary hover:bg-Accent"
                 : "bg-gray-300 dark:bg-gray-600 cursor-not-allowed"
             }`}
           >
-            Create Task
+            {isEdit ? "Save Changes" : "Create Task"}
           </button>
         </div>
       </motion.div>
