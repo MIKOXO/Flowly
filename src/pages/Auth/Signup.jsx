@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
+import { storageService } from "../../services/storageService";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -28,7 +29,7 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -51,31 +52,34 @@ const Signup = () => {
       return;
     }
 
-    // Get stored users
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+      // Check if email already exists using storage service
+      const existingUser = await storageService.getUserByEmail(form.email);
+      if (existingUser) {
+        setErrors({ email: "Email already registered." });
+        setTimeout(() => setErrors({}), 3000);
+        return;
+      }
 
-    // Check if email already exists
-    const existingUser = storedUsers.find((user) => user.email === form.email);
-    if (existingUser) {
-      setErrors({ email: "Email already registered." });
+      // Save new user using storage service
+      const newUser = {
+        username: form.username,
+        email: form.email,
+        password: form.password,
+      };
+      await storageService.createUser(newUser);
+
+      // Save active session
+      localStorage.setItem("user", JSON.stringify(newUser));
+      localStorage.setItem("loggedInUser", JSON.stringify(newUser));
+
+      // Redirect to board
+      navigate("/board");
+    } catch (error) {
+      console.error("Error creating user:", error);
+      setErrors({ general: "An error occurred during registration." });
       setTimeout(() => setErrors({}), 3000);
-      return;
     }
-
-    // Save new user
-    const newUser = {
-      username: form.username,
-      email: form.email,
-      password: form.password,
-    };
-    storedUsers.push(newUser);
-    localStorage.setItem("users", JSON.stringify(storedUsers));
-
-    // Save active session
-    localStorage.setItem("loggedInUser", JSON.stringify(newUser));
-
-    // Redirect to board
-    navigate("/board");
   };
 
   return (

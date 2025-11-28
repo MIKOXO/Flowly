@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
+import { storageService } from "../../services/storageService";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import ThemeToggle from "../../components/ThemeToggle";
@@ -16,7 +17,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -35,25 +36,35 @@ const Login = () => {
       return;
     }
 
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+      // Authenticate user using storage service
+      const authenticatedUser = await storageService.authenticateUser(
+        email,
+        password
+      );
 
-    const existingUser = storedUsers.find((user) => user.email === email);
+      if (!authenticatedUser) {
+        setErrors({ email: "User not found. Please sign up first." });
+        setTimeout(() => setErrors({}), 3000);
+        return;
+      }
 
-    if (!existingUser) {
-      setErrors({ email: "User not found. Please sign up first." });
+      if (authenticatedUser.password !== password) {
+        setErrors({ password: "Incorrect password." });
+        setTimeout(() => setErrors({}), 3000);
+        return;
+      }
+
+      // Save active session
+      localStorage.setItem("user", JSON.stringify(authenticatedUser));
+      localStorage.setItem("loggedInUser", JSON.stringify(authenticatedUser));
+
+      navigate("/board");
+    } catch (error) {
+      console.error("Error during authentication:", error);
+      setErrors({ general: "An error occurred during login." });
       setTimeout(() => setErrors({}), 3000);
-      return;
     }
-
-    if (existingUser.password !== password) {
-      setErrors({ password: "Incorrect password." });
-      setTimeout(() => setErrors({}), 3000);
-      return;
-    }
-
-    localStorage.setItem("user", JSON.stringify({ email }));
-
-    navigate("/board");
   };
 
   return (

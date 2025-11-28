@@ -10,7 +10,8 @@ const Logout = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
+    localStorage.removeItem("user");
+    localStorage.removeItem("loggedInUser");
     window.location.href = "/";
   };
 
