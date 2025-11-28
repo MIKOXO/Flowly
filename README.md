@@ -1,16 +1,76 @@
-# React + Vite
+# Flowly - Task Management Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Flowly is a modern, responsive task management application built with React and Vite. It provides users with an intuitive Kanban-style interface to organize and track their tasks efficiently.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication**: Secure sign up and login system with user-specific data isolation
+- **Kanban Board**: Drag-and-drop task management across To-Do, In Progress, and Completed columns
+- **Task Management**: Create, edit, and delete tasks with priority levels
+- **User-Specific Data**: Tasks are stored uniquely per user with email-based identification
+- **Responsive Design**: Works seamlessly across desktop and mobile devices
+- **Dark/Light Theme**: Toggle between color schemes based on user preference
+- **Statistics Dashboard**: Visual representation of task completion with charts
+- **Custom Storage Service**: Abstracted data layer ready for backend integration
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, Vite 7
+- **Styling**: Tailwind CSS with custom theme
+- **UI Components**: Framer Motion for animations, Heroicons for icons
+- **Drag & Drop**: @hello-pangea/dnd library
+- **Charts**: Recharts for data visualization
+- **Routing**: React Router DOM
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/MIKOXO/Flowly
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd flowly
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+1. Create an account or log in to access your personal task board
+2. Add tasks using the "Add Task" button or modal
+3. Organize tasks by dragging them between columns
+4. Edit or delete tasks using the buttons on each task card
+5. View statistics on the dashboard to track your progress
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+│   ├── Auth/           # Authentication pages
+│   └── Board/          # Main board page
+├── services/           # API and storage services
+└── utils/              # Utility functions
+```
+
+## Customization
+
+The application uses a custom storage service that can be easily extended to connect to a real backend API. The current implementation stores data in a simulated backend structure that persists in localStorage.
+
+## Credits
+
+Coded by [MIKOXO](https://github.com/MIKOXO)
